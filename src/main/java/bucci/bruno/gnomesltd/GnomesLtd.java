@@ -152,13 +152,43 @@ public class GnomesLtd {
 
         // Creating a company
         Company gnomesLtd = new Company("Gnomes Ltd");
-
-        // Adding employees to the company
+        
         gnomesLtd.addNewStaff(new Employee("Joe Bloggs", "jb@gmail.com"));
         gnomesLtd.addNewStaff(new Employee("Ann Banana", "ab@gmail.com"));
         gnomesLtd.addNewStaff(new Employee("Tom Thumb", "tt@gmail.com"));
 
-        // Login for the manager
+        int choice;
+        do {
+            System.out.println("1. Log in");
+            System.out.println("2. View current staff");
+            System.out.println("3. Add new staff");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    login(manager, gnomesLtd, scanner);
+                    break;
+                case 2:
+                    viewCurrentStaff(gnomesLtd);
+                    break;
+                case 3:
+                    addNewStaff(gnomesLtd, scanner);
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+
+        } while (choice != 4);
+
+        scanner.close();
+    }
+
+    private static void login(Manager manager, Company gnomesLtd, Scanner scanner) {
         System.out.print("Enter username: ");
         String enteredUsername = scanner.next();
         System.out.print("Enter password: ");
@@ -166,13 +196,24 @@ public class GnomesLtd {
 
         if (enteredUsername.equals(manager.getUsername()) && enteredPassword.equals(manager.getPassword())) {
             System.out.println("Login successful!");
-            System.out.println("Current staff:");
-            gnomesLtd.listEmployees(0); // Display all employees
         } else {
             System.out.println("Login failed. Incorrect username or password.");
         }
+    }
 
-        scanner.close();
+    private static void viewCurrentStaff(Company gnomesLtd) {
+        System.out.println("Current staff:");
+        gnomesLtd.listEmployees(0); // Display all employees
+    }
+
+    private static void addNewStaff(Company gnomesLtd, Scanner scanner) {
+        System.out.print("Enter employee name: ");
+        String name = scanner.next();
+        System.out.print("Enter employee email: ");
+        String email = scanner.next();
+
+        Employee newEmployee = new Employee(name, email);
+        gnomesLtd.addNewStaff(newEmployee);
+        System.out.println("New staff added successfully!");
     }
 }
-
