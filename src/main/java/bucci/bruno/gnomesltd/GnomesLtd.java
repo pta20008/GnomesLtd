@@ -1,13 +1,11 @@
-/*
- * https://github.com/pta20008/GnomesLtd.git
- */
-
+/**
+ ** https://github.com/pta20008/GnomesLtd.git
+ **/
 package bucci.bruno.gnomesltd;
 
 /**
- *
- * @author bruno
- */
+ ** @author bruno
+ **/
 
 
 import java.util.ArrayList;
@@ -49,10 +47,10 @@ class Employee {
 
     // Mutator method
     public void setEmail(String email) {
-        if (email.length() > 3) {
+        if (email.length() > 3 && email.contains("@")) {
             this.email = email;
         } else {
-            System.out.println("Invalid email. It must be longer than 3 characters.");
+            System.out.println("Invalid email. It must be longer than 3 characters and contain '@'.");
         }
     }
 
@@ -116,9 +114,23 @@ class Company {
         while (iterator.hasNext()) {
             Employee employee = iterator.next();
             if (employee.getEmpNum() > empNumThreshold) {
-                System.out.println(employee.getName());
+                System.out.println(employee.getEmpNum() + "- " + "Name: " + employee.getName() + ", Email: " + employee.getEmail());
             }
         }
+    }
+
+    // Remove an employee by empNum
+    public void removeStaff(int empNum) {
+        Iterator<Employee> iterator = staff.iterator();
+        while (iterator.hasNext()) {
+            Employee employee = iterator.next();
+            if (employee.getEmpNum() == empNum) {
+                iterator.remove();
+                System.out.println("Employee removed successfully.");
+                return;
+            }
+        }
+        System.out.println("Employee not found.");
     }
 }
 
@@ -144,51 +156,65 @@ class Manager extends Employee {
 }
 
 public class GnomesLtd {
+    private static boolean isAdminLoggedIn = false;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Creating a manager
         Manager manager = new Manager("Manager Gnome", "manager@gnomes.com", "Gnomeo", "smurf");
 
-        // Creating a company
         Company gnomesLtd = new Company("Gnomes Ltd");
-        
+
         gnomesLtd.addNewStaff(new Employee("Joe Bloggs", "jb@gmail.com"));
         gnomesLtd.addNewStaff(new Employee("Ann Banana", "ab@gmail.com"));
         gnomesLtd.addNewStaff(new Employee("Tom Thumb", "tt@gmail.com"));
 
         int choice;
         do {
+            System.out.println("#######   Welcome to Gnomes Ltd System!  #######");
             System.out.println("1. Log in");
             System.out.println("2. View current staff");
             System.out.println("3. Add new staff");
-            System.out.println("4. Exit");
+            System.out.println("4. Remove staff");
+            System.out.println("5. Exit");
+            System.out.println("##############");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
-                    login(manager, gnomesLtd, scanner);
+                    login(manager, scanner);
                     break;
                 case 2:
                     viewCurrentStaff(gnomesLtd);
                     break;
                 case 3:
-                    addNewStaff(gnomesLtd, scanner);
+                    if (isAdminLoggedIn) {
+                        addNewStaff(gnomesLtd, scanner);
+                    } else {
+                        System.out.println("Only available by an Admin. Please log in!");
+                    }
                     break;
                 case 4:
+                    if (isAdminLoggedIn) {
+                        removeStaff(gnomesLtd, scanner);
+                    } else {
+                        System.out.println("Only available by an Admin. Please log in!");
+                    }
+                    break;
+                case 5:
                     System.out.println("Exiting...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
 
-        } while (choice != 4);
+        } while (choice != 5);
 
         scanner.close();
     }
 
-    private static void login(Manager manager, Company gnomesLtd, Scanner scanner) {
+    private static void login(Manager manager, Scanner scanner) {
         System.out.print("Enter username: ");
         String enteredUsername = scanner.next();
         System.out.print("Enter password: ");
@@ -196,6 +222,7 @@ public class GnomesLtd {
 
         if (enteredUsername.equals(manager.getUsername()) && enteredPassword.equals(manager.getPassword())) {
             System.out.println("Login successful!");
+            isAdminLoggedIn = true;
         } else {
             System.out.println("Login failed. Incorrect username or password.");
         }
@@ -208,12 +235,19 @@ public class GnomesLtd {
 
     private static void addNewStaff(Company gnomesLtd, Scanner scanner) {
         System.out.print("Enter employee name: ");
-        String name = scanner.next();
+        scanner.nextLine();
+        String name = scanner.nextLine();
         System.out.print("Enter employee email: ");
-        String email = scanner.next();
+        String email = scanner.nextLine();
 
         Employee newEmployee = new Employee(name, email);
         gnomesLtd.addNewStaff(newEmployee);
         System.out.println("New staff added successfully!");
+    }
+
+    private static void removeStaff(Company gnomesLtd, Scanner scanner) {
+        System.out.print("Enter empNum of the employee to remove: ");
+        int empNumToRemove = scanner.nextInt();
+        gnomesLtd.removeStaff(empNumToRemove);
     }
 }
