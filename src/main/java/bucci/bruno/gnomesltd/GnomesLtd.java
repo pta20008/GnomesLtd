@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+// Employee class
 class Employee {
     private String name;
     private String email;
@@ -60,6 +61,7 @@ class Employee {
     }
 }
 
+// EmployeeTest class
 class EmployeeTest {
     public static void main(String[] args) {
         Employee[] projectGroup = new Employee[3];
@@ -84,6 +86,7 @@ class EmployeeTest {
     }
 }
 
+// Company class
 class Company {
     private String companyName;
     private ArrayList<Employee> staff;
@@ -134,6 +137,7 @@ class Company {
     }
 }
 
+// Additional functionality for Manager class
 class Manager extends Employee {
     private String username;
     private String password;
@@ -155,6 +159,7 @@ class Manager extends Employee {
     }
 }
 
+// Console menu system
 public class GnomesLtd {
     private static boolean isAdminLoggedIn = false;
 
@@ -213,7 +218,7 @@ public class GnomesLtd {
 
         scanner.close();
     }
-
+    // Login system
     private static void login(Manager manager, Scanner scanner) {
         System.out.print("Enter username: ");
         String enteredUsername = scanner.next();
@@ -227,12 +232,12 @@ public class GnomesLtd {
             System.out.println("Login failed. Incorrect username or password.");
         }
     }
-
+    // Listing the staff (printing current staff)
     private static void viewCurrentStaff(Company gnomesLtd) {
         System.out.println("Current staff:");
         gnomesLtd.listEmployees(0); // Display all employees
     }
-
+    // Receiving name and email from user to be added
     private static void addNewStaff(Company gnomesLtd, Scanner scanner) {
         System.out.print("Enter employee name: ");
         scanner.nextLine();
@@ -244,7 +249,7 @@ public class GnomesLtd {
         gnomesLtd.addNewStaff(newEmployee);
         System.out.println("New staff added successfully!");
     }
-
+    // Receiving the empNum from user to be deleted
     private static void removeStaff(Company gnomesLtd, Scanner scanner) {
         System.out.print("Enter empNum of the employee to remove: ");
         int empNumToRemove = scanner.nextInt();
